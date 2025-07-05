@@ -1,0 +1,24 @@
+{
+  "name": "tinycompressor",
+  "version": "1.0.0",
+  "description": "Minimalistic image compressor webapp using TinyPNG API",
+  "main": "src/worker.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "npx wrangler dev",
+    "frontend": "npx serve public -p 3000",
+    "start": "concurrently \"npm run dev\" \"npm run frontend\"",
+    "deploy": "npx wrangler deploy",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231121.0",
+    "typescript": "^5.0.0",
+    "wrangler": "^4.0.0",
+    "serve": "^14.2.0",
+    "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "tinify": "^1.7.1"
+  }
+} 
