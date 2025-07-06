@@ -2,6 +2,10 @@ name = "tinyimages"
 main = "src/worker.ts"
 compatibility_date = "2023-11-21"
 
+[[r2_buckets]]
+binding = "STATIC_FILES"
+bucket_name = "tinycompressor-static"
+
 [vars]
 # Add any environment variables here
 
