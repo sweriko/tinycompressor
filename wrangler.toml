@@ -7,7 +7,7 @@ binding = "STATIC_FILES"
 bucket_name = "tinycompressor-static"
 
 [vars]
-# Add any environment variables here
+# Add any environment variables here hehe
 
 [env.production]
 name = "tinycompressor" 
