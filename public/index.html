@@ -116,13 +116,20 @@
 
         <!-- Processing Queue -->
         <div id="queueSection" class="bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-lg p-4 sm:p-6">
-            <div class="flex items-center gap-3 mb-4 sm:mb-6">
-                <div class="w-7 h-7 sm:w-8 sm:h-8 bg-[#FF8C42] border-2 border-black rounded-md flex items-center justify-center">
-                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M4,6V8H20V6H4M4,10V12H20V10H4M4,14V16H20V14H4M4,18V20H20V18H4Z"/>
-                    </svg>
+            <div class="flex items-center justify-between mb-4 sm:mb-6">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl sm:text-2xl font-black text-black">PROCESSING QUEUE</h2>
                 </div>
-                <h2 class="text-xl sm:text-2xl font-black text-black">PROCESSING QUEUE</h2>
+                <button 
+                    id="downloadAllBtn"
+                    class="hidden px-3 py-2 sm:px-4 sm:py-2 border-2 border-black bg-[#6C5CE7] hover:bg-[#5a4fcf] hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] active:bg-[#4c43b7] rounded-md font-bold text-white transition-all duration-150 flex items-center gap-2 text-sm sm:text-base"
+                    title="Download all processed images as ZIP"
+                >
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
+                    <span class="hidden sm:inline">ZIP</span>
+                </button>
             </div>
             
             <div id="queueContainer" class="flex flex-col gap-3 sm:gap-4">
@@ -131,6 +138,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 

@@ -128,6 +128,12 @@ class TinyCompressor {
                 this.handleFiles(e.dataTransfer.files);
             }
         });
+
+        // Download all button
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        downloadAllBtn.addEventListener('click', () => {
+            this.downloadAllImages();
+        });
     }
 
     switchMode() {
@@ -590,6 +596,8 @@ class TinyCompressor {
         });
 
         // No additional animation needed - button transforms directly
+        // Update download all button visibility
+        this.updateDownloadAllButton();
     }
 
     updateQueueItemError(itemId, errorMessage) {
@@ -654,6 +662,81 @@ class TinyCompressor {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+
+    async downloadAllImages() {
+        const completedImages = Array.from(this.processingQueue.values())
+            .filter(item => item.status === 'completed' && item.data);
+
+        if (completedImages.length === 0) {
+            this.showNotification('No processed images to download', 'error', 2000);
+            return;
+        }
+
+        try {
+            // Show processing state
+            const downloadAllBtn = document.getElementById('downloadAllBtn');
+            const originalContent = downloadAllBtn.innerHTML;
+            downloadAllBtn.disabled = true;
+            downloadAllBtn.innerHTML = `
+                <div class="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white rounded-full animate-spin border-t-transparent"></div>
+                <span class="hidden sm:inline">Creating ZIP...</span>
+            `;
+
+            const zip = new JSZip();
+            
+            // Add each completed image to the zip
+            completedImages.forEach((item, index) => {
+                const { compressedImageData, filename } = item.data;
+                
+                // Convert base64 to binary data
+                const binaryData = atob(compressedImageData);
+                const byteArray = new Uint8Array(binaryData.length);
+                for (let i = 0; i < binaryData.length; i++) {
+                    byteArray[i] = binaryData.charCodeAt(i);
+                }
+                
+                // Add to zip with processed filename
+                zip.file(filename, byteArray);
+            });
+
+            // Generate the zip file
+            const zipBlob = await zip.generateAsync({ type: 'blob' });
+            
+            // Create download link
+            const url = URL.createObjectURL(zipBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `processed-images-${Date.now()}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Show success notification
+            this.showNotification(`Downloaded ${completedImages.length} images as ZIP`, 'success', 3000);
+
+        } catch (error) {
+            console.error('Error creating zip file:', error);
+            this.showNotification('Error creating ZIP file', 'error', 3000);
+        } finally {
+            // Restore button state
+            const downloadAllBtn = document.getElementById('downloadAllBtn');
+            downloadAllBtn.disabled = false;
+            downloadAllBtn.innerHTML = originalContent;
+        }
+    }
+
+    updateDownloadAllButton() {
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const completedImages = Array.from(this.processingQueue.values())
+            .filter(item => item.status === 'completed' && item.data);
+
+        if (completedImages.length > 0) {
+            downloadAllBtn.classList.remove('hidden');
+        } else {
+            downloadAllBtn.classList.add('hidden');
+        }
     }
 
     formatFileSize(bytes) {
